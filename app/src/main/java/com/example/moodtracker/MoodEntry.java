@@ -2,6 +2,7 @@ package com.example.moodtracker;
 
 import java.time.LocalDateTime;
 
+// Gemmer mood data
 public class MoodEntry {
     private String mood;
     private String note;

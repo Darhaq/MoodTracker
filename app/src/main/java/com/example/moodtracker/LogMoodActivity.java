@@ -29,15 +29,15 @@ public class LogMoodActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_mood);
 
         editNote = findViewById(R.id.edit_note);
-        Button btnSave = findViewById(R.id.btn_save);
+        Button btnSave = findViewById(R.id.btn_save); // Finder gem-knappen
 
         // Find mood-knapper
         findViewById(R.id.btn_happy).setOnClickListener(v -> selectedMood = "Happy");
         findViewById(R.id.btn_sad).setOnClickListener(v -> selectedMood = "Sad");
         findViewById(R.id.btn_stressed).setOnClickListener(v -> selectedMood = "Stressed");
 
-        // TODO: tilføj din egen logik til at vælge mood, fx fra knapper/radiogruppe
 
+        // Håndterer gemning af humør med bekræftelsespopup
         btnSave.setOnClickListener(v -> {
             MoodEntry newMood = new MoodEntry(selectedMood, editNote.getText().toString(), LocalDateTime.now());
             saveMood(newMood);
@@ -53,22 +53,22 @@ public class LogMoodActivity extends AppCompatActivity {
     }
 
     private void saveMood(MoodEntry newMood) {
-        SharedPreferences prefs = getSharedPreferences("MoodTracker", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("MoodTracker", MODE_PRIVATE); // Får adgang til SharedPreferences
 
-        String json = prefs.getString("mood_list", "[]");
+        String json = prefs.getString("mood_list", "[]"); // Henter eksisterende JSON eller tom liste
         Type listType = new TypeToken<List<MoodEntry>>() {
         }.getType();
-        List<MoodEntry> moods = GsonHelper.getGson().fromJson(json, listType);
+        List<MoodEntry> moods = GsonHelper.getGson().fromJson(json, listType); // Konverterer JSON til liste
 
         if (moods == null) {
-            moods = new ArrayList<>();
+            moods = new ArrayList<>(); // Initialiserer tom liste, hvis null
         }
 
-        moods.add(newMood);
-        String updatedJson = GsonHelper.getGson().toJson(moods);
-        prefs.edit().putString("mood_list", updatedJson).apply();
+        moods.add(newMood); // Tilføjer det nye humørindlæg
+        String updatedJson = GsonHelper.getGson().toJson(moods); // Konverterer tilbage til JSON
+        prefs.edit().putString("mood_list", updatedJson).apply(); // Gemmer opdateret JSON
 
-        Log.d("MoodTracker", "Saved moods: " + updatedJson);
+        Log.d("MoodTracker", "Saved moods: " + updatedJson); // Logger gemte data
     }
 
     @Override

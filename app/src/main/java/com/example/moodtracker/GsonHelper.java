@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import java.time.LocalDateTime;
 
+// hjaelper med at serialisere MoodEntry data
 public class GsonHelper {
     private static Gson gson;
 

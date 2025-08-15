@@ -24,7 +24,7 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
 
         textViewHistory = findViewById(R.id.tv_mood_list);
-        displayHistory();
+        displayHistory(); // Viser historikken
     }
 
     private List<MoodEntry> loadMoods() {
@@ -39,51 +39,51 @@ public class HistoryActivity extends AppCompatActivity {
             Type listType = new TypeToken<List<MoodEntry>>(){}.getType();
             List<MoodEntry> moods = GsonHelper.getGson().fromJson(json, listType);
             if (moods != null) {
-                return moods;
+                return moods; // Returnerer liste, hvis gyldig
             }
         } catch (Exception e) {
             Log.w("MoodTracker", "Not a JSON array, trying migration...", e);
         }
 
         try {
-            MoodEntry singleMood = GsonHelper.getGson().fromJson(json, MoodEntry.class);
-            if (singleMood != null) {
-                List<MoodEntry> migrated = new ArrayList<>();
-                migrated.add(singleMood);
-                prefs.edit().putString("mood_list", GsonHelper.getGson().toJson(migrated)).apply();
-                Log.d("MoodTracker", "Migrated old data to array format.");
+            MoodEntry singleMood = GsonHelper.getGson().fromJson(json, MoodEntry.class); // Forsøger at parse som enkelt objekt
+            if (singleMood != null) { // if null ->
+                List<MoodEntry> migrated = new ArrayList<>(); // Opretter ny liste
+                migrated.add(singleMood); // Tilføjer det gamle indlæg
+                prefs.edit().putString("mood_list", GsonHelper.getGson().toJson(migrated)).apply(); // Gemmer migreret data
+                Log.d("MoodTracker", "Migrated old data to array format."); // Logger migration
                 return migrated;
             }
         } catch (Exception e) {
-            Log.e("MoodTracker", "Migration failed: " + e.getMessage());
+            Log.e("MoodTracker", "Migration failed: " + e.getMessage()); // Logger fejl ved mislykket migration
         }
 
-        return new ArrayList<>();
+        return new ArrayList<>(); // Returnerer tom liste ved fejl
     }
 
     private void displayHistory() {
-        List<MoodEntry> moods = loadMoods();
+        List<MoodEntry> moods = loadMoods(); // Henter humørindlæg
         if (moods.isEmpty()) {
-            textViewHistory.setText("No moods logged yet");
+            textViewHistory.setText("No moods logged yet"); // Viser besked, hvis listen er tom
             return;
         }
 
         StringBuilder sb = new StringBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); // Definerer tidsformat
 
         for (MoodEntry mood : moods) {
-            sb.append(mood.getMood())
+            sb.append(mood.getMood()) // Tilføjer humør
                     .append(" - ")
-                    .append(mood.getTimestamp().format(formatter));
+                    .append(mood.getTimestamp().format(formatter)); // Tilføjer formateret tid
 
             if (mood.getNote() != null && !mood.getNote().isEmpty()) {
-                sb.append(" (Note: ").append(mood.getNote()).append(")");
+                sb.append(" (Note: ").append(mood.getNote()).append(")"); // Tilføjer note, hvis til stede
             }
 
-            sb.append("\n");
+            sb.append("\n"); // Ny linje for hvert indlæg
         }
 
-        textViewHistory.setText(sb.toString());
+        textViewHistory.setText(sb.toString()); // Opdaterer tekstvisningen
     }
 
 
