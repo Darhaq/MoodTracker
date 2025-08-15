@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("MoodTracker", "onResume called"); // Logger, når aktiviteten genoptages
+        Log.d("MoodTracker", "onResume called"); // Logger, når aktiviteten genoptagess
     }
 
     @Override
